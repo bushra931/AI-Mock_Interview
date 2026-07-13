@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Rocket } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
@@ -7,6 +7,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen grid place-items-center px-6 py-12">
       <div className="glass w-full max-w-md rounded-3xl p-8 shadow-elegant">
@@ -25,7 +26,7 @@ function LoginPage() {
             <label className="flex items-center gap-2"><input type="checkbox" /> Remember me</label>
             <a href="#" className="hover:text-foreground">Forgot password?</a>
           </div>
-          <button type="button" className="w-full btn-primary rounded-xl px-6 py-3 font-medium">Sign in</button>
+          <button type="button" onClick={() => navigate({ to: "/dashboard" })} className="w-full btn-primary rounded-xl px-6 py-3 font-medium">Sign in</button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
           New here? <Link to="/signup" className="text-primary-glow hover:underline">Create an account</Link>
