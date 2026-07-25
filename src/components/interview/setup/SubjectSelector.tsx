@@ -1,5 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 
+type Props = {
+  value: string;
+  onChange: (subject: string) => void;
+};
+
 const subjects = [
   {
     id: "dsa",
@@ -33,7 +38,10 @@ const subjects = [
   },
 ];
 
-export default function SubjectSelector() {
+export default function SubjectSelector({
+  value,
+  onChange,
+}: Props) {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold">
@@ -44,7 +52,19 @@ export default function SubjectSelector() {
         {subjects.map((subject) => (
           <Card
             key={subject.id}
-            className="cursor-pointer transition-all duration-300 border-white/10 bg-white/5 hover:border-violet-500 hover:shadow-xl hover:shadow-violet-500/20"
+            onClick={() => onChange(subject.id)}
+            className={`
+              cursor-pointer
+              transition-all
+              duration-300
+              bg-white/5
+
+              ${
+                value === subject.id
+                  ? "border-violet-500 scale-105 shadow-xl shadow-violet-500/20"
+                  : "border-white/10 hover:border-violet-500 hover:shadow-lg"
+              }
+            `}
           >
             <CardContent className="p-5">
               <div className="text-3xl">
@@ -55,7 +75,7 @@ export default function SubjectSelector() {
                 {subject.title}
               </h3>
 
-              <p className="text-sm text-gray-400 mt-2">
+              <p className="mt-2 text-sm text-gray-400">
                 {subject.subtitle}
               </p>
             </CardContent>

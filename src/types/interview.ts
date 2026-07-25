@@ -1,6 +1,6 @@
 export type Subject =
   | "dsa"
-  | "oops"
+  | "oop"
   | "os"
   | "dbms"
   | "cn";
