@@ -109,8 +109,10 @@ function InterviewPage() {
   const submitAnswer = () => {
     if (!currentQuestion || answer.trim() === "") return;
 
+    const score = Number((Math.random() * 3 + 7).toFixed(1));
+    
     setFeedback({
-      score: 8.2,
+      score,
       strengths: [
         "Clear explanation.",
         "Covered the important concepts.",

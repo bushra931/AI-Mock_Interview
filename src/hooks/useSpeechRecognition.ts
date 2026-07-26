@@ -30,26 +30,55 @@ export function useSpeechRecognition() {
     recognition.interimResults = true;
     recognition.lang = "en-US";
 
+    // recognition.onstart = () => {
+    //   setListening(true);
+    // };
+
+    // recognition.onend = () => {
+    //   setListening(false);
+    // };
+
+    // recognition.onerror = () => {
+    //   setListening(false);
+    // };
+
+    // recognition.onresult = (event) => {
+    //   let text = "";
+
+    //   for (let i = 0; i < event.results.length; i++) {
+    //     text += event.results[i][0].transcript;
+    //   }
+
+    //   setTranscript(text);
+    // };
+
     recognition.onstart = () => {
-      setListening(true);
+        console.log("🎤 Speech started");
+        setListening(true);
     };
 
     recognition.onend = () => {
-      setListening(false);
+        console.log("🛑 Speech ended");
+        setListening(false);
     };
 
-    recognition.onerror = () => {
-      setListening(false);
+    recognition.onerror = (event : any) => {
+        console.log("❌ Speech error:", event.error);
+        setListening(false);
     };
 
     recognition.onresult = (event) => {
-      let text = "";
+        console.log("✅ Result received:", event.results);
 
-      for (let i = 0; i < event.results.length; i++) {
-        text += event.results[i][0].transcript;
-      }
+        let text = "";
 
-      setTranscript(text);
+        for (let i = 0; i < event.results.length; i++) {
+            text += event.results[i][0].transcript;
+        }
+
+        console.log("📝 Transcript:", text);
+
+        setTranscript(text);
     };
 
     recognitionRef.current = recognition;
