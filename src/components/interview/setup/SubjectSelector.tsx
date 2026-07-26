@@ -13,7 +13,7 @@ const subjects = [
     icon: "🧠",
   },
   {
-    id: "oops",
+    id: "oop",
     title: "Object Oriented Programming",
     subtitle: "Core OOP Concepts",
     icon: "⚙️",
