@@ -1,15 +1,26 @@
+import { useState } from "react";
+
 import SubjectSelector from "./SubjectSelector";
 import DifficultySelector from "./DifficultySelector";
 import QuestionCountSelector from "./QuestionCountSelector";
+
 import { Button } from "@/components/ui/button";
 
-interface InterviewSetupProps {
-  onStart: () => void;
-}
+type Props = {
+  onStart: (
+    subject: string,
+    difficulty: string,
+    questionCount: number
+  ) => void;
+};
 
 export default function InterviewSetup({
   onStart,
-}: InterviewSetupProps) {
+}: Props) {
+  const [subject, setSubject] = useState("");
+  const [difficulty, setDifficulty] = useState("");
+  const [questionCount, setQuestionCount] = useState(10);
+
   return (
     <div className="mx-auto max-w-7xl space-y-10">
 
@@ -25,20 +36,38 @@ export default function InterviewSetup({
 
       <div className="glass rounded-3xl p-8 space-y-10">
 
-        <SubjectSelector />
+        <SubjectSelector
+          value={subject}
+          onChange={setSubject}
+        />
 
-        <DifficultySelector />
+        <DifficultySelector
+          value={difficulty}
+          onChange={setDifficulty}
+        />
 
-        <QuestionCountSelector />
+        <QuestionCountSelector
+          value={questionCount}
+          onChange={setQuestionCount}
+        />
 
-        <div className="flex justify-center pt-4">
+        <div className="flex justify-center">
+
           <Button
             size="lg"
-            className="px-12 py-7 text-lg rounded-2xl"
-            onClick={onStart}
+            className="px-12 py-7 rounded-2xl text-lg"
+            disabled={!subject || !difficulty}
+            onClick={() =>
+              onStart(
+                subject,
+                difficulty,
+                questionCount
+              )
+            }
           >
             Start Interview
           </Button>
+
         </div>
 
       </div>
