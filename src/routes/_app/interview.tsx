@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+// import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PageHeader } from "@/components/app/PageHeader";
 import InterviewSetup from "@/components/interview/setup/InterviewSetup";
@@ -18,6 +19,8 @@ import {
   MessageSquare,
   Play,
 } from "lucide-react";
+
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 
 export const Route = createFileRoute("/_app/interview")({
   component: InterviewPage,
@@ -63,6 +66,20 @@ function InterviewPage() {
     strengths: string[];
     improvements: string[];
   } | null>(null);
+
+  const {
+    transcript,
+    listening,
+    supported,
+    startListening,
+    stopListening,
+  } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (transcript) {
+      setAnswer(transcript);
+    }
+  }, [transcript]);
 
   const allQuestions = useMemo<InterviewQuestion[]>(() => {
     return [
@@ -259,11 +276,20 @@ return (
           />
 
           <div className="mt-4 flex gap-3">
+            {/* <button
+              onClick={listening ? stopListening : startListening}
+              disabled={!supported} */}
             <button
-              className="glass rounded-xl px-4 py-2 flex items-center gap-2"
+              onClick={() => {
+                console.log("supported:", supported);
+                console.log("clicked");
+                listening ? stopListening() : startListening();
+              }}
+              className="glass rounded-xl px-4 py-2 flex items-center gap-2 disabled:opacity-50"
             >
               <Mic className="h-4 w-4" />
-              Record
+
+              {listening ? "Stop Recording" : "Record Answer"}
             </button>
 
             <button
@@ -275,6 +301,18 @@ return (
               Submit Answer
             </button>
           </div>
+
+          {listening && (
+            <p className="mt-3 text-sm text-red-500 animate-pulse">
+              🎤 Listening...
+            </p>
+          )}
+
+          {!supported && (
+            <p className="mt-3 text-sm text-red-500">
+              Speech recognition is not supported in this browser.
+            </p>
+          )}
 
           {feedback && (
             <div className="mt-8 rounded-2xl border border-border p-6">
