@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LearningResourcesRouteImport } from './routes/learning-resources'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRoadmapRouteImport } from './routes/_app/roadmap'
@@ -30,6 +31,11 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningResourcesRoute = LearningResourcesRouteImport.update({
+  id: '/learning-resources',
+  path: '/learning-resources',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -84,6 +90,7 @@ const AppCareerGoalRoute = AppCareerGoalRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/learning-resources': typeof LearningResourcesRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/career-goal': typeof AppCareerGoalRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/learning-resources': typeof LearningResourcesRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/career-goal': typeof AppCareerGoalRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/learning-resources': typeof LearningResourcesRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_app/career-goal': typeof AppCareerGoalRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/learning-resources'
     | '/login'
     | '/signup'
     | '/career-goal'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/learning-resources'
     | '/login'
     | '/signup'
     | '/career-goal'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/learning-resources'
     | '/login'
     | '/signup'
     | '/_app/career-goal'
@@ -169,6 +181,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  LearningResourcesRoute: typeof LearningResourcesRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
 }
@@ -187,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning-resources': {
+      id: '/learning-resources'
+      path: '/learning-resources'
+      fullPath: '/learning-resources'
+      preLoaderRoute: typeof LearningResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -289,6 +309,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  LearningResourcesRoute: LearningResourcesRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
 }
