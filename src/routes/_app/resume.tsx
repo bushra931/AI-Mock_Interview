@@ -2,21 +2,40 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Upload, FileText, CheckCircle2, AlertTriangle, XCircle, Sparkles } from "lucide-react";
+import type { ATSResult } from "../../types/ats";
+import { analyzeResume } from "../../lib/resumeApi";
 
 export const Route = createFileRoute("/_app/resume")({
   component: ResumePage,
   head: () => ({ meta: [{ title: "Resume ATS — CareerPilot AI" }] }),
 });
 
+
+
 function ResumePage() {
-  const [file, setFile] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [done, setDone] = useState(false);
+  const [result, setResult] = useState<ATSResult | null>(null);
 
-  const analyze = () => {
+const analyze = async () => {
+  if (!file) return;
+
+  try {
     setAnalyzing(true);
-    setTimeout(() => { setAnalyzing(false); setDone(true); }, 1400);
-  };
+
+    const data = await analyzeResume(file);
+
+    setResult(data);
+
+    setDone(true);
+  } catch (error) {
+    console.error(error);
+    alert("Failed to analyze resume.");
+  } finally {
+    setAnalyzing(false);
+  }
+};
 
   return (
     <>
@@ -34,13 +53,18 @@ function ResumePage() {
           <div className="text-sm text-muted-foreground mt-1">PDF or DOCX · max 5MB</div>
           <input
             type="file"
+            accept=".pdf,.doc,.docx"
             className="hidden"
-            onChange={(e) => setFile(e.target.files?.[0]?.name ?? "resume.pdf")}
+           onChange={(e) => {
+              if (e.target.files?.length) {
+                  setFile(e.target.files[0]);
+              }
+          }}
           />
           {file && (
             <div className="mt-6 flex items-center gap-2 glass rounded-xl px-4 py-2">
               <FileText className="h-4 w-4 text-primary-glow" />
-              <span className="text-sm">{file}</span>
+              <span className="text-sm">{file.name}</span>
             </div>
           )}
           {file && (
@@ -66,7 +90,7 @@ function ResumePage() {
                 <circle
                   cx="50" cy="50" r="42" strokeWidth="10" fill="none"
                   stroke="url(#g1)" strokeLinecap="round"
-                  strokeDasharray={`${(84 / 100) * 264} 264`}
+                 strokeDasharray={`${((result?.score ?? 0) / 100) * 264} 264`}
                 />
                 <defs>
                   <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
@@ -77,7 +101,7 @@ function ResumePage() {
               </svg>
               <div className="absolute inset-0 grid place-items-center">
                 <div>
-                  <div className="text-4xl font-bold text-gradient">84</div>
+                  <div className="text-4xl font-bold text-gradient">{result?.score}</div>
                   <div className="text-xs text-muted-foreground">ATS Score</div>
                 </div>
               </div>
@@ -89,11 +113,11 @@ function ResumePage() {
           <div className="glass rounded-2xl p-6 lg:col-span-2">
             <h3 className="font-semibold mb-4">Breakdown</h3>
             {[
-              { label: "Keyword match", value: 78 },
-              { label: "Formatting & parseability", value: 92 },
-              { label: "Impact & metrics", value: 65 },
-              { label: "Skills coverage", value: 80 },
-              { label: "Readability", value: 88 },
+              { label: "Keyword match", value: result?.keywordMatch ?? 0 },
+              { label: "Formatting & parseability", value: result?.formatting ?? 0 },
+              { label: "Impact & metrics", value: result?.impact ?? 0 },
+              { label: "Skills coverage", value: result?.skills ?? 0 },
+              { label: "Readability", value: result?.readability ?? 0 },
             ].map((r) => (
               <div key={r.label} className="mb-3">
                 <div className="flex justify-between text-sm mb-1"><span>{r.label}</span><span className="text-muted-foreground">{r.value}%</span></div>
@@ -121,7 +145,7 @@ function ResumePage() {
               ))}
             </ul>
             <div className="mt-6 flex gap-3">
-              <button onClick={() => { setDone(false); setFile(null); }} className="glass rounded-xl px-4 py-2 text-sm">Analyze another</button>
+              <button onClick={() => { setDone(false); setFile(null); setResult(null);}} className="glass rounded-xl px-4 py-2 text-sm">Analyze another</button>
               <button className="btn-primary rounded-xl px-4 py-2 text-sm font-medium">Download improved resume</button>
             </div>
           </div>
