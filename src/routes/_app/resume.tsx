@@ -130,23 +130,36 @@ const analyze = async () => {
 
           <div className="glass rounded-2xl p-6 lg:col-span-3">
             <h3 className="font-semibold mb-4">AI Suggestions</h3>
-            <ul className="space-y-3">
-              {[
-                { icon: CheckCircle2, tone: "text-emerald-400", text: "Great use of action verbs like 'led', 'built', 'shipped'." },
-                { icon: AlertTriangle, tone: "text-orange-400", text: "Add measurable impact — e.g. 'reduced load time by 42%'." },
-                { icon: XCircle, tone: "text-rose-400", text: "Missing keywords: TypeScript, Docker, CI/CD, REST API." },
-                { icon: AlertTriangle, tone: "text-orange-400", text: "Skills section should be near the top for ATS parsers." },
-                { icon: CheckCircle2, tone: "text-emerald-400", text: "Contact info is clean and machine-readable." },
-              ].map((s, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm">
-                  <s.icon className={`h-5 w-5 shrink-0 ${s.tone}`} />
-                  <span>{s.text}</span>
-                </li>
-              ))}
-            </ul>
+               <ul className="space-y-3">
+    {result?.suggestions?.map((text, i) => (
+      <li key={i} className="flex items-start gap-3 text-sm">
+        <AlertTriangle className="h-5 w-5 shrink-0 text-orange-400" />
+        <span>{text}</span>
+      </li>
+    ))}
+  </ul>
+
+  {result?.missingKeywords?.length ? (
+    <div className="mt-6">
+      <h4 className="font-semibold mb-2 text-rose-400">
+        Missing Keywords
+      </h4>
+
+      <div className="flex flex-wrap gap-2">
+        {result.missingKeywords.map((keyword) => (
+          <span
+            key={keyword}
+            className="px-3 py-1 rounded-full bg-rose-500/10 text-rose-300 text-sm"
+          >
+            {keyword}
+          </span>
+        ))}
+      </div>
+    </div>
+  ) : null}
+
             <div className="mt-6 flex gap-3">
               <button onClick={() => { setDone(false); setFile(null); setResult(null);}} className="glass rounded-xl px-4 py-2 text-sm">Analyze another</button>
-              <button className="btn-primary rounded-xl px-4 py-2 text-sm font-medium">Download improved resume</button>
             </div>
           </div>
         </div>
