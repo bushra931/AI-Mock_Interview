@@ -8,10 +8,14 @@
   },
   "dependencies": {
     "@google/genai": "^2.13.0",
+    "buffer": "^6.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "multer": "^2.2.0",
-    "pdf-parse-new": "^2.1.0"
+    "unpdf": "^1.8.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.114.0"
   }
 }
