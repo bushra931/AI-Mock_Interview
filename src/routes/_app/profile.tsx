@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/app/PageHeader";
-import { Award, Mail, MapPin, Pencil, Link2 } from "lucide-react";
+import { Award, Mail, Pencil } from "lucide-react";
+import { getCurrentUser } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
@@ -15,6 +16,9 @@ const badges = [
 ];
 
 function ProfilePage() {
+  const user = getCurrentUser();
+  const initial = user?.name?.charAt(0).toUpperCase() || "U";
+
   return (
     <>
       <PageHeader
@@ -25,15 +29,12 @@ function ProfilePage() {
 
       <div className="glass rounded-3xl p-8">
         <div className="flex flex-col md:flex-row gap-6 items-start">
-          <div className="grid h-24 w-24 place-items-center rounded-3xl btn-primary text-3xl font-bold">A</div>
+          <div className="grid h-24 w-24 place-items-center rounded-3xl btn-primary text-3xl font-bold">{initial}</div>
           <div className="flex-1">
-            <h2 className="text-2xl font-bold">Aditya Raghuram</h2>
-            <p className="text-muted-foreground">B.Tech CSE · Final Year · VIT Vellore</p>
+            <h2 className="text-2xl font-bold">{user?.name || "User"}</h2>
+            <p className="text-muted-foreground">{user?.branch || "Branch"} · {user?.college || "College"}</p>
             <div className="mt-3 flex flex-wrap gap-4 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5"><Mail className="h-4 w-4" /> aditya@example.com</span>
-              <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4" /> Chennai, India</span>
-              <a href="#" className="inline-flex items-center gap-1.5 hover:text-foreground"><Link2 className="h-4 w-4" /> github.com/aditya</a>
-              <a href="#" className="inline-flex items-center gap-1.5 hover:text-foreground"><Link2 className="h-4 w-4" /> linkedin.com/in/aditya</a>
+              <span className="inline-flex items-center gap-1.5"><Mail className="h-4 w-4" /> {user?.email || "email@example.com"}</span>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 text-center">

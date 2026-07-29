@@ -10,7 +10,25 @@ export const Route = createFileRoute("/_app/resume")({
   head: () => ({ meta: [{ title: "Resume ATS — CareerPilot AI" }] }),
 });
 
-
+function setLocalStats(score: number, readability: number) {
+  try {
+    const raw = localStorage.getItem("careerpilot_users");
+    if (!raw) return;
+    const users = JSON.parse(raw);
+    const email = localStorage.getItem("careerpilot_session");
+    if (!email) return;
+    const user = users.find((u: any) => u.email === email);
+    if (!user) return;
+    if (!user.stats) user.stats = { readinessScore: 0, skillsMastered: 0, totalSkills: 32, atsScore: null, mockInterviews: 0, streak: 0, technicalSkills: 0, communication: 0, problemSolving: 0, resumeQuality: 0, interviewConfidence: 0 };
+    user.stats.atsScore = score;
+    user.stats.resumeQuality = readability;
+    if (!user.activities) user.activities = [];
+    user.activities.unshift({ text: `Resume ATS scan — score ${score}`, time: "Just now" });
+    localStorage.setItem("careerpilot_users", JSON.stringify(users));
+  } catch (e) {
+    console.error("setLocalStats error:", e);
+  }
+}
 
 function ResumePage() {
   const [file, setFile] = useState<File | null>(null);
@@ -18,24 +36,21 @@ function ResumePage() {
   const [done, setDone] = useState(false);
   const [result, setResult] = useState<ATSResult | null>(null);
 
-const analyze = async () => {
-  if (!file) return;
-
-  try {
-    setAnalyzing(true);
-
-    const data = await analyzeResume(file);
-
-    setResult(data);
-
-    setDone(true);
-  } catch (error) {
-    console.error(error);
-    alert("Failed to analyze resume.");
-  } finally {
-    setAnalyzing(false);
-  }
-};
+  const analyze = async () => {
+    if (!file) return;
+    try {
+      setAnalyzing(true);
+      const data = await analyzeResume(file);
+      setResult(data);
+      setLocalStats(data.score, data.readability);
+      setDone(true);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to analyze resume.");
+    } finally {
+      setAnalyzing(false);
+    }
+  };
 
   return (
     <>
