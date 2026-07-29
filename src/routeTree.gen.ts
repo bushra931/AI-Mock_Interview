@@ -9,20 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as LearningResourcesRouteImport } from './routes/learning-resources'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRoadmapRouteImport } from './routes/_app/roadmap'
 import { Route as AppResumeRouteImport } from './routes/_app/resume'
 import { Route as AppProfileRouteImport } from './routes/_app/profile'
 import { Route as AppPlacementsRouteImport } from './routes/_app/placements'
+import { Route as AppLearningResourcesRouteImport } from './routes/_app/learning-resources'
 import { Route as AppInterviewRouteImport } from './routes/_app/interview'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppCommunityRouteImport } from './routes/_app/community'
 import { Route as AppCareerGoalRouteImport } from './routes/_app/career-goal'
 
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -31,11 +37,6 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearningResourcesRoute = LearningResourcesRouteImport.update({
-  id: '/learning-resources',
-  path: '/learning-resources',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -67,6 +68,11 @@ const AppPlacementsRoute = AppPlacementsRouteImport.update({
   path: '/placements',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLearningResourcesRoute = AppLearningResourcesRouteImport.update({
+  id: '/learning-resources',
+  path: '/learning-resources',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInterviewRoute = AppInterviewRouteImport.update({
   id: '/interview',
   path: '/interview',
@@ -90,13 +96,14 @@ const AppCareerGoalRoute = AppCareerGoalRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/learning-resources': typeof LearningResourcesRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/career-goal': typeof AppCareerGoalRoute
   '/community': typeof AppCommunityRoute
   '/dashboard': typeof AppDashboardRoute
   '/interview': typeof AppInterviewRoute
+  '/learning-resources': typeof AppLearningResourcesRoute
   '/placements': typeof AppPlacementsRoute
   '/profile': typeof AppProfileRoute
   '/resume': typeof AppResumeRoute
@@ -104,13 +111,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/learning-resources': typeof LearningResourcesRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/career-goal': typeof AppCareerGoalRoute
   '/community': typeof AppCommunityRoute
   '/dashboard': typeof AppDashboardRoute
   '/interview': typeof AppInterviewRoute
+  '/learning-resources': typeof AppLearningResourcesRoute
   '/placements': typeof AppPlacementsRoute
   '/profile': typeof AppProfileRoute
   '/resume': typeof AppResumeRoute
@@ -120,13 +128,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
-  '/learning-resources': typeof LearningResourcesRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/_app/career-goal': typeof AppCareerGoalRoute
   '/_app/community': typeof AppCommunityRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/interview': typeof AppInterviewRoute
+  '/_app/learning-resources': typeof AppLearningResourcesRoute
   '/_app/placements': typeof AppPlacementsRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/resume': typeof AppResumeRoute
@@ -136,13 +145,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/learning-resources'
     | '/login'
     | '/signup'
+    | '/verify-email'
     | '/career-goal'
     | '/community'
     | '/dashboard'
     | '/interview'
+    | '/learning-resources'
     | '/placements'
     | '/profile'
     | '/resume'
@@ -150,13 +160,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/learning-resources'
     | '/login'
     | '/signup'
+    | '/verify-email'
     | '/career-goal'
     | '/community'
     | '/dashboard'
     | '/interview'
+    | '/learning-resources'
     | '/placements'
     | '/profile'
     | '/resume'
@@ -165,13 +176,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
-    | '/learning-resources'
     | '/login'
     | '/signup'
+    | '/verify-email'
     | '/_app/career-goal'
     | '/_app/community'
     | '/_app/dashboard'
     | '/_app/interview'
+    | '/_app/learning-resources'
     | '/_app/placements'
     | '/_app/profile'
     | '/_app/resume'
@@ -181,13 +193,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
-  LearningResourcesRoute: typeof LearningResourcesRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  VerifyEmailRoute: typeof VerifyEmailRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -200,13 +219,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learning-resources': {
-      id: '/learning-resources'
-      path: '/learning-resources'
-      fullPath: '/learning-resources'
-      preLoaderRoute: typeof LearningResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -251,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlacementsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/learning-resources': {
+      id: '/_app/learning-resources'
+      path: '/learning-resources'
+      fullPath: '/learning-resources'
+      preLoaderRoute: typeof AppLearningResourcesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/interview': {
       id: '/_app/interview'
       path: '/interview'
@@ -287,6 +306,7 @@ interface AppRouteChildren {
   AppCommunityRoute: typeof AppCommunityRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppInterviewRoute: typeof AppInterviewRoute
+  AppLearningResourcesRoute: typeof AppLearningResourcesRoute
   AppPlacementsRoute: typeof AppPlacementsRoute
   AppProfileRoute: typeof AppProfileRoute
   AppResumeRoute: typeof AppResumeRoute
@@ -298,6 +318,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCommunityRoute: AppCommunityRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppInterviewRoute: AppInterviewRoute,
+  AppLearningResourcesRoute: AppLearningResourcesRoute,
   AppPlacementsRoute: AppPlacementsRoute,
   AppProfileRoute: AppProfileRoute,
   AppResumeRoute: AppResumeRoute,
@@ -309,9 +330,9 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
-  LearningResourcesRoute: LearningResourcesRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  VerifyEmailRoute: VerifyEmailRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

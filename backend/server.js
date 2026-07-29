@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import resumeRoutes from "./routes/resumeRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/resume", resumeRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 8000;
 

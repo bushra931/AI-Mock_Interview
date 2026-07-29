@@ -1,4 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { clearSession } from "@/lib/auth";
 import {
   LayoutDashboard,
   Target,
@@ -8,6 +9,7 @@ import {
   Users,
   Briefcase,
   User,
+  BookOpen,
   Rocket,
   LogOut,
 } from "lucide-react";
@@ -18,6 +20,7 @@ const nav = [
   { to: "/roadmap", label: "Roadmap", icon: Map },
   { to: "/resume", label: "Resume ATS", icon: FileText },
   { to: "/interview", label: "Mock Interview", icon: Mic },
+  { to: "/learning-resources", label: "Resources", icon: BookOpen },
   { to: "/community", label: "Community", icon: Users },
   { to: "/placements", label: "Placements", icon: Briefcase },
   { to: "/profile", label: "Profile", icon: User },
@@ -25,6 +28,13 @@ const nav = [
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    clearSession();
+    navigate({ to: "/login", replace: true });
+  };
+
   return (
     <aside className="hidden lg:flex fixed inset-y-0 left-0 w-64 flex-col p-4 z-40">
       <div className="glass rounded-3xl h-full p-4 flex flex-col">
@@ -56,13 +66,13 @@ export function AppSidebar() {
             );
           })}
         </nav>
-        <Link
-          to="/login"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-white/5"
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-white/5 w-full text-left"
         >
           <LogOut className="h-4 w-4" />
           Sign out
-        </Link>
+        </button>
       </div>
     </aside>
   );
